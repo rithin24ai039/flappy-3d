@@ -11,6 +11,6 @@ export function createGame({onScore,onState}) {
  function reset(){velocity=0;running=false;score=0;bird.mesh.position.set(0,0,0);pipes.reset();onScore(0);onState("Click or press SPACE to start");}
  function flap(){if(!running){running=true;onState("");} velocity=PHYSICS.FLAP;}
  function end(){running=false;onState("Game Over — click or press SPACE to restart");}
- function update(){if(running){velocity-=PHYSICS.GRAVITY;bird.mesh.position.y+=velocity;bird.animate(1/60, velocity);if(Math.abs(bird.mesh.position.y)>5)end();const result=pipes.update(bird.mesh.position);if(result.hit)end();if(result.scored){score++;onScore(score);}}renderer.render(scene,camera);requestAnimationFrame(update);}
+ function update(){if(running){velocity-=PHYSICS.GRAVITY;bird.mesh.position.y+=velocity;bird.animate(1/60, velocity);if(Math.abs(bird.mesh.position.y)>5)end();const result=pipes.update(bird.mesh.position, score);if(result.hit)end();if(result.scored){score++;onScore(score);}}renderer.render(scene,camera);requestAnimationFrame(update);}
  addEventListener("resize",()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});reset();update();return {flap};
 }
