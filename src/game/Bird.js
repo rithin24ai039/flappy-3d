@@ -1,0 +1,2 @@
+import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+export function createBird(scene){const mesh=new THREE.Mesh(new THREE.SphereGeometry(.5,24,16),new THREE.MeshStandardMaterial({color:0xffd43b}));scene.add(mesh);return {mesh};}
