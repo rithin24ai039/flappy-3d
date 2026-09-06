@@ -9,21 +9,16 @@ const game = createGame({
   onStart: ui.hideGameOver
 });
 
-ui.bindStart(game.flap);
+const flap = event => {
+  event?.preventDefault?.();
+  game.flap();
+};
 
-// Keyboard
 window.addEventListener("keydown", event => {
-  if (event.code === "Space") {
-    event.preventDefault();
-    game.flap();
-  }
+  if (event.code === "Space") flap(event);
 });
 
-// Mobile + desktop: one primary press handler.
-// Preventing the default touch action stops accidental scrolling/zooming.
-window.addEventListener("pointerdown", event => {
-  if (event.pointerType === "touch" || event.pointerType === "mouse") {
-    event.preventDefault();
-    game.flap();
-  }
-}, { passive: false });
+// Touch events are kept explicitly for mobile browser compatibility.
+document.addEventListener("touchstart", flap, { passive: false });
+document.addEventListener("mousedown", flap);
+document.addEventListener("pointerdown", flap, { passive: false });
