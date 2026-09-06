@@ -1,6 +1,6 @@
 import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 
-const BASE_SPEED = 0.055;
+const BASE_SPEED = 0.028;
 const GAP = 3.15;
 const PIPE_HEIGHT = 8;
 const PIPE_SPACING = 7;
@@ -52,7 +52,7 @@ export function createPipes(scene) {
   function update(birdPosition, difficulty = 0) {
     let hit = false;
     let scored = false;
-    const speed = BASE_SPEED + Math.min(difficulty * 0.0015, 0.03);
+    const speed = BASE_SPEED + Math.min(difficulty * 0.0007, 0.015);
 
     let rightmostX = Math.max(...pairs.map(p => p.top.position.x));
 
