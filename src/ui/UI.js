@@ -1,0 +1,1 @@
+export function createUI(){const score=document.querySelector("#score"),msg=document.querySelector("#msg");return {setScore:v=>score.textContent=v,setMessage:v=>msg.textContent=v,bindStart:fn=>document.querySelector("#game").addEventListener("click",fn)};}
