@@ -8,10 +8,22 @@ const game = createGame({
   onGameOver: ui.showGameOver,
   onStart: ui.hideGameOver
 });
+
 ui.bindStart(game.flap);
-window.addEventListener("keydown", e => {
-  if (e.code === "Space") { e.preventDefault(); game.flap(); }
+
+// Keyboard
+window.addEventListener("keydown", event => {
+  if (event.code === "Space") {
+    event.preventDefault();
+    game.flap();
+  }
 });
-window.addEventListener("pointerdown", e => {
-  if (e.target.closest("#game")) game.flap();
-});
+
+// Mobile + desktop: one primary press handler.
+// Preventing the default touch action stops accidental scrolling/zooming.
+window.addEventListener("pointerdown", event => {
+  if (event.pointerType === "touch" || event.pointerType === "mouse") {
+    event.preventDefault();
+    game.flap();
+  }
+}, { passive: false });
