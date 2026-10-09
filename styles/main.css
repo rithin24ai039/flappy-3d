@@ -49,6 +49,7 @@ canvas{display:block}
 .stat-tile span{display:block;font-size:9px;font-weight:900;letter-spacing:1.5px;color:rgba(240,247,255,.68)}
 .stat-tile strong{display:block;margin-top:7px;font-size:32px;font-weight:900;color:#fff}
 .best-tile strong{color:#a9f0c1}
+.retry-hint{margin:9px 0 0;color:rgba(240,247,255,.7)}
 .best{min-height:18px;margin:12px 0;color:#a9f0c1;font-size:12px;font-weight:900;letter-spacing:1px}
 .setting-row{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:14px 0;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left}
 .setting-row strong,.setting-row small{display:block}
