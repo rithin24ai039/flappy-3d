@@ -1,1 +1,80 @@
-<!doctype html><html><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no"/><title>Flappy 3D</title><link rel="stylesheet" href="./styles/main.css"/></head><body><div id="game"></div><div id="ui"><header class="topbar"><div class="brand">FLAPPY <span>3D</span></div><div class="score-panel"><span class="label">SCORE</span><div id="score">0</div></div></header><div id="msg" class="message">Tap anywhere to start</div><section id="gameOver" class="game-over hidden" aria-live="polite"><div class="result-card"><p class="eyebrow">GAME OVER</p><h1>Your Flight</h1><div class="final-score"><span>FINAL SCORE</span><strong id="finalScore">0</strong></div><p id="newBest" class="best"></p><p class="restart">Tap anywhere to fly again</p></div></section></div><script type="module" src="./src/main.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no"/>
+  <meta name="theme-color" content="#102747"/>
+  <title>Flappy 3D — Skybound</title>
+  <link rel="stylesheet" href="./styles/main.css"/>
+</head>
+<body>
+  <div id="game" aria-label="3D game world"></div>
+  <div id="ui">
+    <header class="topbar">
+      <div class="brand">FLAPPY <span>3D</span><small>SKYBOUND</small></div>
+      <div class="top-actions">
+        <div class="score-panel"><span class="label">SCORE</span><div id="score">0</div></div>
+        <button id="pauseBtn" class="icon-button hidden" aria-label="Pause game" title="Pause">Ⅱ</button>
+        <button id="soundBtn" class="icon-button" aria-label="Toggle sound" title="Toggle sound">♫</button>
+      </div>
+    </header>
+
+    <div id="msg" class="message hidden" aria-live="polite"></div>
+
+    <section id="startScreen" class="screen-layer">
+      <div class="screen-card start-card">
+        <div class="sunburst" aria-hidden="true">✦</div>
+        <p class="eyebrow">YOUR NEXT ADVENTURE</p>
+        <h1>FLY <span>BEYOND</span></h1>
+        <p class="screen-copy">Soar through the skies, dodge the gates, and beat your best.</p>
+        <button id="playBtn" class="primary-button"><span>▶</span> Play now</button>
+        <div class="key-hint"><span>SPACE</span> or <span>TAP</span> to flap</div>
+        <button id="settingsBtn" class="text-button">⚙ Settings</button>
+      </div>
+    </section>
+
+    <section id="pauseScreen" class="screen-layer hidden">
+      <div class="screen-card compact-card">
+        <p class="eyebrow">TAKE A BREATHER</p>
+        <h2>Paused</h2>
+        <p class="screen-copy">Your flight is waiting for you.</p>
+        <button id="resumeBtn" class="primary-button">▶ Resume flight</button>
+        <button id="pauseSettingsBtn" class="secondary-button">⚙ Settings</button>
+        <button id="quitBtn" class="text-button">Back to start</button>
+      </div>
+    </section>
+
+    <section id="gameOver" class="screen-layer hidden" aria-live="polite">
+      <div class="screen-card result-card">
+        <div class="result-icon">✦</div>
+        <p class="eyebrow">FLIGHT COMPLETE</p>
+        <h2 id="resultTitle">Nice try!</h2>
+        <div class="stats-row">
+          <div class="stat-tile"><span>YOUR SCORE</span><strong id="finalScore">0</strong></div>
+          <div class="stat-tile best-tile"><span>PERSONAL BEST</span><strong id="bestScore">0</strong></div>
+        </div>
+        <p id="newBest" class="best"></p>
+        <button id="restartBtn" class="primary-button">↻ Fly again</button>
+        <button id="homeBtn" class="text-button">⌂ Main menu</button>
+      </div>
+    </section>
+
+    <section id="settingsScreen" class="screen-layer hidden" aria-label="Settings">
+      <div class="screen-card compact-card settings-card">
+        <p class="eyebrow">MAKE IT YOURS</p>
+        <h2>Settings</h2>
+        <div class="setting-row">
+          <div><strong>Game sound</strong><small>Flap and flight effects</small></div>
+          <button id="settingsSoundBtn" class="toggle-button" role="switch" aria-checked="true">ON</button>
+        </div>
+        <div class="setting-row">
+          <div><strong>Reduced motion</strong><small>Calmer menu animations</small></div>
+          <button id="motionBtn" class="toggle-button" role="switch" aria-checked="false">OFF</button>
+        </div>
+        <button id="closeSettingsBtn" class="primary-button">Done</button>
+      </div>
+    </section>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
