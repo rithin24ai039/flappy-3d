@@ -28,6 +28,8 @@ export function createUI() {
   const showScreen = screen => {
     hideScreens();
     if (screen) screen.classList.remove("hidden");
+    // A visible menu is a modal state: underlying game controls must not receive input.
+    document.body.classList.toggle("menu-open", Boolean(screen));
   };
   const setSound = enabled => {
     soundEnabled = enabled;
@@ -92,6 +94,7 @@ export function createUI() {
     },
     showPlaying() {
       hideScreens();
+      document.body.classList.remove("menu-open");
       pauseBtn.classList.remove("hidden");
       msg.classList.add("hidden");
     },
