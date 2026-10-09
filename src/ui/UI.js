@@ -1,6 +1,7 @@
 export function createUI() {
   const $ = selector => document.querySelector(selector);
   const score = $("#score");
+  const timer = $("#timer");
   const msg = $("#msg");
   const startScreen = $("#startScreen");
   const pauseScreen = $("#pauseScreen");
@@ -83,6 +84,11 @@ export function createUI() {
 
   return {
     setScore(value) { score.textContent = String(value); },
+    setTime(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      timer.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    },
     setMessage(value) {
       msg.textContent = value || "";
       msg.classList.toggle("hidden", !value);
