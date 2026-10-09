@@ -75,6 +75,10 @@ export function createUI() {
   settingsSoundBtn.addEventListener("click", () => setSound(!soundEnabled));
   motionBtn.addEventListener("click", () => setReducedMotion(!reducedMotion));
 
+  // Explicitly show the welcome screen on every fresh page load.
+  showScreen(startScreen);
+  pauseBtn.classList.add("hidden");
+
   return {
     setScore(value) { score.textContent = String(value); },
     setMessage(value) {
