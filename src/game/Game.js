@@ -4,7 +4,7 @@ import { createPipes } from "./Pipes.js";
 import { PHYSICS } from "./constants.js";
 import { createEnvironment } from "./Environment.js";
 
-export function createGame({onScore,onState,onGameOver,onStart,onPause,onResume,onHome,onSound}) {
+export function createGame({onScore,onTime,onState,onGameOver,onStart,onPause,onResume,onHome,onSound}) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
   camera.position.set(0, 0, 12);
@@ -25,6 +25,7 @@ export function createGame({onScore,onState,onGameOver,onStart,onPause,onResume,
   const pipes = createPipes(scene);
   const clock = new THREE.Clock();
   let velocity = 0, running = false, paused = false, started = false, score = 0;
+  let elapsedSeconds = 0, lastReportedSecond = -1;
   let soundEnabled = true;
   let audioContext;
 
@@ -45,6 +46,8 @@ export function createGame({onScore,onState,onGameOver,onStart,onPause,onResume,
   }
   function reset() {
     velocity = 0; score = 0;
+    elapsedSeconds = 0; lastReportedSecond = -1;
+    onTime?.(0);
     bird.mesh.position.set(0, 0, 0);
     pipes.reset();
     onScore(0);
@@ -90,6 +93,12 @@ export function createGame({onScore,onState,onGameOver,onStart,onPause,onResume,
     const delta = Math.min(clock.getDelta(), 0.05);
     environment.update(delta, running);
     if (running) {
+      elapsedSeconds += delta;
+      const wholeSeconds = Math.floor(elapsedSeconds);
+      if (wholeSeconds !== lastReportedSecond) {
+        lastReportedSecond = wholeSeconds;
+        onTime?.(wholeSeconds);
+      }
       velocity -= PHYSICS.GRAVITY;
       bird.mesh.position.y += velocity;
       bird.animate(delta, velocity);
