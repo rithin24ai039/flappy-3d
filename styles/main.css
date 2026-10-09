@@ -62,3 +62,17 @@ canvas{display:block}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-7px) rotate(4deg)}}
 @media(max-width:600px){.topbar{top:13px}.brand{font-size:17px;letter-spacing:1.8px}.brand small{font-size:8px;letter-spacing:3px}.score-panel{min-width:72px;padding:8px 11px}.score-panel #score{font-size:29px}.icon-button{width:40px;height:40px;border-radius:13px}.top-actions{gap:6px}.screen-layer{padding:72px 15px 18px}.screen-card{border-radius:25px;padding:27px 24px}.start-card{padding-top:29px}.screen-card h2{font-size:34px}.screen-copy{font-size:13px;margin:13px auto 21px}.compact-card{padding:29px 24px}}
 @media(max-height:650px){.screen-layer{padding-top:60px;padding-bottom:12px}.screen-card{padding-top:22px;padding-bottom:22px}.sunburst{width:42px;height:42px;margin-bottom:9px}.screen-card h1{font-size:38px}.screen-copy{margin:10px auto 16px}.key-hint{margin:10px 0 5px}.text-button{margin-top:8px}}
+
+
+/* Modal menu state: prevent the HUD and world from accepting stray input. */
+body.menu-open #ui{pointer-events:none}
+body.menu-open .screen-layer:not(.hidden){pointer-events:auto}
+body.menu-open .topbar,
+body.menu-open .message{pointer-events:none!important}
+.screen-layer:not(.hidden){isolation:isolate}
+.screen-layer:not(.hidden)::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,rgba(81,160,208,.13),transparent 52%),linear-gradient(180deg,rgba(3,12,29,.2),rgba(3,12,29,.5))}
+.screen-card{z-index:1}
+.start-card{border-color:rgba(255,255,255,.27);background:linear-gradient(150deg,rgba(21,54,91,.94),rgba(5,17,39,.94))}
+.start-card h1{letter-spacing:-2.4px;text-shadow:0 6px 28px rgba(0,0,0,.18)}
+.start-card .screen-copy{max-width:285px}
+.primary-button:focus-visible,.secondary-button:focus-visible,.text-button:focus-visible,.toggle-button:focus-visible,.icon-button:focus-visible{outline:3px solid rgba(255,224,125,.9);outline-offset:3px}
