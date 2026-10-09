@@ -22,7 +22,15 @@ ui.bindActions({
 });
 
 window.addEventListener("keydown", event => {
-  if (event.code === "Space") {
+  const menuOpen = document.body.classList.contains("menu-open");
+  if (menuOpen) {
+    // Allow only menu buttons while a menu/settings/game-over screen is visible.
+    if (event.code === "Space" || event.code === "ArrowUp" || event.code === "Enter") {
+      event.preventDefault();
+    }
+    return;
+  }
+  if (event.code === "Space" || event.code === "ArrowUp") {
     event.preventDefault();
     game.flap();
   }
@@ -41,6 +49,7 @@ window.addEventListener("keydown", event => {
 
 const canvas = document.querySelector("#game");
 canvas?.addEventListener("pointerdown", event => {
+  if (document.body.classList.contains("menu-open")) return;
   if (event.button !== undefined && event.button !== 0) return;
   event.preventDefault();
   game.flap();
