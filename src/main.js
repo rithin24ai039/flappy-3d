@@ -24,7 +24,14 @@ ui.bindActions({
 window.addEventListener("keydown", event => {
   const menuOpen = document.body.classList.contains("menu-open");
   if (menuOpen) {
-    // Allow only menu buttons while a menu/settings/game-over screen is visible.
+    // Enter is the keyboard equivalent of the retry button on the Game Over screen.
+    const gameOverVisible = !document.querySelector("#gameOver")?.classList.contains("hidden");
+    if (event.code === "Enter" && gameOverVisible) {
+      event.preventDefault();
+      game.restart();
+      return;
+    }
+    // All other gameplay keys are ignored while a menu/settings screen is visible.
     if (event.code === "Space" || event.code === "ArrowUp" || event.code === "Enter") {
       event.preventDefault();
     }
