@@ -26,6 +26,13 @@ window.addEventListener("keydown", event => {
     event.preventDefault();
     game.flap();
   }
+  if (event.code === "Enter") {
+    const gameOverVisible = !document.querySelector("#gameOver")?.classList.contains("hidden");
+    if (gameOverVisible) {
+      event.preventDefault();
+      game.restart();
+    }
+  }
   if (event.code === "Escape" || event.code === "KeyP") {
     event.preventDefault();
     game.pause();
