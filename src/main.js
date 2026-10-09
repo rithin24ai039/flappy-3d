@@ -6,19 +6,37 @@ const game = createGame({
   onScore: ui.setScore,
   onState: ui.setMessage,
   onGameOver: ui.showGameOver,
-  onStart: ui.hideGameOver
+  onStart: ui.showPlaying,
+  onPause: ui.showPaused,
+  onResume: ui.showPlaying,
+  onHome: ui.showStart
 });
 
-const flap = event => {
-  event?.preventDefault?.();
-  game.flap();
-};
+ui.bindActions({
+  onPlay: game.start,
+  onPause: game.pause,
+  onResume: game.resume,
+  onRestart: game.restart,
+  onHome: game.home,
+  onSoundChange: game.setSoundEnabled
+});
 
 window.addEventListener("keydown", event => {
-  if (event.code === "Space") flap(event);
+  if (event.code === "Space") {
+    event.preventDefault();
+    game.flap();
+  }
+  if (event.code === "Escape" || event.code === "KeyP") {
+    event.preventDefault();
+    game.pause();
+  }
 });
 
-// Touch events are kept explicitly for mobile browser compatibility.
-document.addEventListener("touchstart", flap, { passive: false });
-document.addEventListener("mousedown", flap);
-document.addEventListener("pointerdown", flap, { passive: false });
+const canvas = document.querySelector("#game");
+canvas?.addEventListener("pointerdown", event => {
+  if (event.button !== undefined && event.button !== 0) return;
+  event.preventDefault();
+  game.flap();
+}, { passive: false });
+
+ui.showStart();
