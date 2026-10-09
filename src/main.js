@@ -4,6 +4,7 @@ import { createUI } from "./ui/UI.js";
 const ui = createUI();
 const game = createGame({
   onScore: ui.setScore,
+  onTime: ui.setTime,
   onState: ui.setMessage,
   onGameOver: ui.showGameOver,
   onStart: ui.showPlaying,
