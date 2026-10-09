@@ -20,6 +20,30 @@ export function createEnvironment(scene) {
   sun.position.set(-7, 5.2, -18);
   scene.add(sun);
 
+  const moon = new THREE.Mesh(
+    new THREE.SphereGeometry(0.72, 20, 14),
+    new THREE.MeshBasicMaterial({ color: 0xdbe8ff })
+  );
+  moon.position.set(7, 4.2, -17);
+  scene.add(moon);
+
+  const starPositions = [];
+  for (let i = 0; i < 180; i++) {
+    starPositions.push(
+      (Math.random() - 0.5) * 65,
+      1.5 + Math.random() * 18,
+      -22 - Math.random() * 12
+    );
+  }
+  const starGeometry = new THREE.BufferGeometry();
+  starGeometry.setAttribute("position", new THREE.Float32BufferAttribute(starPositions, 3));
+  const stars = new THREE.Points(
+    starGeometry,
+    new THREE.PointsMaterial({ color: 0xe8f2ff, size: 0.11, sizeAttenuation: true })
+  );
+  stars.visible = false;
+  scene.add(stars);
+
   const cloudMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
   const clouds = [];
   for (let i = 0; i < 12; i++) {
@@ -133,12 +157,22 @@ export function createEnvironment(scene) {
     const sky = skyDay.clone().lerp(skySunset, sunsetWeight * 0.88).lerp(skyNight, nightWeight * 0.94);
     scene.background.copy(sky);
     if (scene.fog) scene.fog.color.copy(sky);
-    ambient.intensity = 0.65 + (1 - nightWeight) * 0.9;
-    sunLight.intensity = 0.25 + (1 - nightWeight) * 1.9;
-    sun.material.color.set(nightWeight > 0.65 ? 0xc9d9ff : sunsetWeight > 0.45 ? 0xff8b62 : 0xfff0bc);
+    ambient.color.set(nightWeight > 0.55 ? 0x718fc8 : sunsetWeight > 0.45 ? 0xffc0a0 : 0xc9edff);
+    ambient.groundColor.set(nightWeight > 0.55 ? 0x101b3a : sunsetWeight > 0.45 ? 0x87576b : 0x5a617b);
+    ambient.intensity = 0.25 + (1 - nightWeight) * 1.3;
+    sunLight.color.set(nightWeight > 0.55 ? 0x8ba9ff : sunsetWeight > 0.45 ? 0xff9b72 : 0xffe3b0);
+    sunLight.intensity = 0.12 + (1 - nightWeight) * (sunsetWeight > 0.45 ? 1.25 : 2.1);
+    sun.position.x = -7 + (p - 0.5) * 8;
+    sun.position.y = 2.2 + Math.sin(p * Math.PI) * 3.4;
+    sun.material.color.set(sunsetWeight > 0.45 ? 0xff8b62 : 0xfff0bc);
     sun.visible = nightWeight < 0.85;
+    moon.visible = nightWeight > 0.12;
+    stars.visible = nightWeight > 0.2;
+    stars.material.opacity = Math.min(1, nightWeight * 1.5);
+    stars.rotation.y = elapsed * 0.003;
+    cloudMaterial.color.set(nightWeight > 0.55 ? 0x65718e : sunsetWeight > 0.45 ? 0xffc0ad : 0xffffff);
     ocean.material.color.set(nightWeight > 0.6 ? 0x102d58 : sunsetWeight > 0.45 ? 0x9a6c85 : 0x238db8);
-    ocean.material.emissive.set(nightWeight > 0.6 ? 0x020817 : 0x07334d);
+    ocean.material.emissive.set(nightWeight > 0.6 ? 0x020817 : sunsetWeight > 0.45 ? 0x3a172a : 0x07334d);
 
     for (let i = 0; i < positions.count; i++) {
       const x = positions.getX(i);
