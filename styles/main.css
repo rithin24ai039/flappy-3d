@@ -67,9 +67,10 @@ canvas{display:block}
 
 
 /* Modal menu state: prevent the HUD and world from accepting stray input. */
-body.menu-open #ui{pointer-events:none}
+body.menu-open #ui{pointer-events:auto}
 body.menu-open .screen-layer:not(.hidden){pointer-events:auto}
 body.menu-open .topbar,
+body.menu-open .topbar *,
 body.menu-open .message{pointer-events:none!important}
 .screen-layer:not(.hidden){isolation:isolate}
 .screen-layer:not(.hidden)::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,rgba(81,160,208,.13),transparent 52%),linear-gradient(180deg,rgba(3,12,29,.2),rgba(3,12,29,.5))}
