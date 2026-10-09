@@ -2,15 +2,16 @@ import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 import { createBird } from "./Bird.js";
 import { createPipes } from "./Pipes.js";
 import { PHYSICS } from "./constants.js";
+import { createEnvironment } from "./Environment.js";
 
 export function createGame({onScore,onState,onGameOver,onStart}) {
  const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,100);
- camera.position.set(0,0,12); const renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setSize(innerWidth,innerHeight); document.body.appendChild(renderer.domElement);
- scene.add(new THREE.HemisphereLight(0xffffff,0x444444,2)); const bird=createBird(scene), pipes=createPipes(scene);
+ camera.position.set(0,0,12); const renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(innerWidth,innerHeight); renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.domElement.style.position="fixed"; renderer.domElement.style.inset="0"; renderer.domElement.style.width="100%"; renderer.domElement.style.height="100%"; renderer.domElement.style.zIndex="0"; renderer.domElement.style.touchAction="none"; document.querySelector("#game")?.appendChild(renderer.domElement) || document.body.appendChild(renderer.domElement);
+ const environment=createEnvironment(scene); scene.add(new THREE.HemisphereLight(0xffffff,0x444444,0.8)); const bird=createBird(scene), pipes=createPipes(scene); const clock=new THREE.Clock();
  let velocity=0,running=false,score=0;
  function reset(){velocity=0;running=false;score=0;bird.mesh.position.set(0,0,0);pipes.reset();onScore(0);onState("Click or press SPACE to start");}
  function flap(){if(!running){reset();running=true;onState("");onStart?.();} velocity=PHYSICS.FLAP;}
  function end(){if(!running)return;running=false;onState("");onGameOver?.(score);}
- function update(){if(running){velocity-=PHYSICS.GRAVITY;bird.mesh.position.y+=velocity;bird.animate(1/60, velocity);if(Math.abs(bird.mesh.position.y)>5)end();const result=pipes.update(bird.mesh.position, score);if(result.hit)end();if(result.scored){score++;onScore(score);}}renderer.render(scene,camera);requestAnimationFrame(update);}
+ function update(){const delta=clock.getDelta(); environment.update(delta,running); if(running){velocity-=PHYSICS.GRAVITY;bird.mesh.position.y+=velocity;bird.animate(delta, velocity);if(Math.abs(bird.mesh.position.y)>5)end();const result=pipes.update(bird.mesh.position, score);if(result.hit)end();if(result.scored){score++;onScore(score);}}renderer.render(scene,camera);requestAnimationFrame(update);}
  addEventListener("resize",()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});reset();update();return {flap};
 }
