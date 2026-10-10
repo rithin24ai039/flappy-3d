@@ -101,12 +101,42 @@ export function createGame({onScore,onTime,onState,onGameOver,onStart,onPause,on
     if (!running) return;
     running = false; paused = true;
     onPause?.();
+    // Brief animated PAUSED indicator; the game itself pauses immediately.
+    onCountdown?.("PAUSED");
+    if (countdownTimeout !== null) clearTimeout(countdownTimeout);
+    countdownTimeout = setTimeout(() => {
+      countdownTimeout = null;
+      onCountdown?.(null);
+    }, 850);
   }
   function resume() {
-    if (!paused) return;
-    paused = false; running = true;
-    clock.getDelta();
+    if (!paused || countdownActive) return;
+    if (countdownTimeout !== null) clearTimeout(countdownTimeout);
+    countdownTimeout = null;
+    const token = ++countdownToken;
+    countdownActive = true;
+    running = false;
+    paused = true;
     onResume?.();
+    const countdownStep = value => {
+      if (token !== countdownToken || !countdownActive) return;
+      if (value > 0) {
+        onCountdown?.(String(value));
+        countdownTimeout = setTimeout(() => countdownStep(value - 1), 1000);
+        return;
+      }
+      onCountdown?.("GO!");
+      countdownTimeout = setTimeout(() => {
+        if (token !== countdownToken || !countdownActive) return;
+        countdownActive = false;
+        countdownTimeout = null;
+        onCountdown?.(null);
+        paused = false;
+        running = true;
+        clock.getDelta();
+      }, 450);
+    };
+    countdownStep(3);
   }
   function home() {
     running = false; paused = false; started = false; countdownActive = false;
