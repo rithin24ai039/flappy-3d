@@ -114,6 +114,8 @@ export function createUI() {
         return;
       }
       countdownNumber.textContent = value;
+      const caption = countdownOverlay.querySelector(".countdown-caption");
+      if (caption) caption.textContent = value === "PAUSED" ? "GAME PAUSED" : value === "GO!" ? "LET'S FLY" : "GET READY";
       countdownOverlay.classList.remove("hidden");
       countdownOverlay.setAttribute("aria-hidden", "false");
       countdownOverlay.classList.remove("countdown-pop");
