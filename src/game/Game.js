@@ -104,9 +104,9 @@ export function createGame({onScore,onTime,onState,onGameOver,onStart,onPause,on
   }
   function resume() {
     if (!paused) return;
-    paused = false;
+    paused = false; running = true;
+    clock.getDelta();
     onResume?.();
-    start();
   }
   function home() {
     running = false; paused = false; started = false; countdownActive = false;
