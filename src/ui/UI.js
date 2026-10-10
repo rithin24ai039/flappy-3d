@@ -15,6 +15,8 @@ export function createUI() {
   const soundBtn = $("#soundBtn");
   const settingsSoundBtn = $("#settingsSoundBtn");
   const motionBtn = $("#motionBtn");
+  const countdownOverlay = $("#countdownOverlay");
+  const countdownNumber = $("#countdownNumber");
 
   let best = 0;
   try { best = Number(localStorage.getItem("flappy3d-best") || 0); } catch {}
@@ -103,6 +105,21 @@ export function createUI() {
       document.body.classList.remove("menu-open");
       pauseBtn.classList.remove("hidden");
       msg.classList.add("hidden");
+    },
+    showCountdown(value) {
+      if (!countdownOverlay) return;
+      if (value == null) {
+        countdownOverlay.classList.add("hidden");
+        countdownOverlay.setAttribute("aria-hidden", "true");
+        return;
+      }
+      countdownNumber.textContent = value;
+      countdownOverlay.classList.remove("hidden");
+      countdownOverlay.setAttribute("aria-hidden", "false");
+      countdownOverlay.classList.remove("countdown-pop");
+      // Restart the pop animation each time the number changes.
+      void countdownNumber.offsetWidth;
+      countdownOverlay.classList.add("countdown-pop");
     },
     showPaused() {
       showScreen(pauseScreen);
