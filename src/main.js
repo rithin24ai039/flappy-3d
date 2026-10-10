@@ -10,7 +10,8 @@ const game = createGame({
   onStart: ui.showPlaying,
   onPause: ui.showPaused,
   onResume: ui.showPlaying,
-  onHome: ui.showStart
+  onHome: ui.showStart,
+  onCountdown: ui.showCountdown
 });
 
 ui.bindActions({
