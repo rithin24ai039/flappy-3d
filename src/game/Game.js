@@ -4,7 +4,7 @@ import { createPipes } from "./Pipes.js";
 import { PHYSICS } from "./constants.js";
 import { createEnvironment } from "./Environment.js";
 
-export function createGame({onScore,onTime,onState,onGameOver,onStart,onPause,onResume,onHome,onSound}) {
+export function createGame({onScore,onTime,onState,onGameOver,onStart,onPause,onResume,onHome,onSound,onCountdown}) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
   camera.position.set(0, 0, 12);
@@ -26,6 +26,7 @@ export function createGame({onScore,onTime,onState,onGameOver,onStart,onPause,on
   const clock = new THREE.Clock();
   let velocity = 0, running = false, paused = false, started = false, score = 0;
   let elapsedSeconds = 0, lastReportedSecond = -1;
+  let countdownActive = false, countdownTimeout = null, countdownToken = 0;
   let soundEnabled = true;
   let audioContext;
 
@@ -54,11 +55,32 @@ export function createGame({onScore,onTime,onState,onGameOver,onStart,onPause,on
     onState("");
   }
   function start() {
-    if (running) return;
+    if (running || countdownActive) return;
+    if (countdownTimeout !== null) clearTimeout(countdownTimeout);
+    const token = ++countdownToken;
     reset();
-    started = true; paused = false; running = true;
+    started = true; paused = false; running = false; countdownActive = true;
     onStart?.();
     playTone(520, 0.09, "triangle");
+
+    const countdownStep = value => {
+      if (token !== countdownToken || !countdownActive) return;
+      if (value > 0) {
+        onCountdown?.(String(value));
+        countdownTimeout = setTimeout(() => countdownStep(value - 1), 1000);
+        return;
+      }
+      onCountdown?.("GO!");
+      countdownTimeout = setTimeout(() => {
+        if (token !== countdownToken || !countdownActive) return;
+        countdownActive = false;
+        countdownTimeout = null;
+        onCountdown?.(null);
+        running = true;
+        clock.getDelta();
+      }, 450);
+    };
+    countdownStep(3);
   }
   function flap() {
     if (!running || paused) return;
@@ -66,18 +88,32 @@ export function createGame({onScore,onTime,onState,onGameOver,onStart,onPause,on
     playTone(720, 0.055, "sine");
   }
   function pause() {
+    if (countdownActive) {
+      countdownActive = false;
+      countdownToken++;
+      if (countdownTimeout !== null) clearTimeout(countdownTimeout);
+      countdownTimeout = null;
+      onCountdown?.(null);
+      paused = true;
+      onPause?.();
+      return;
+    }
     if (!running) return;
     running = false; paused = true;
     onPause?.();
   }
   function resume() {
     if (!paused) return;
-    paused = false; running = true;
-    clock.getDelta();
+    paused = false;
     onResume?.();
+    start();
   }
   function home() {
-    running = false; paused = false; started = false;
+    running = false; paused = false; started = false; countdownActive = false;
+    countdownToken++;
+    if (countdownTimeout !== null) clearTimeout(countdownTimeout);
+    countdownTimeout = null;
+    onCountdown?.(null);
     reset();
     onHome?.();
   }
