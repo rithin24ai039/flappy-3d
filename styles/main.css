@@ -89,3 +89,7 @@ body.menu-open .message{pointer-events:none!important}
 .countdown-pop .countdown-caption{animation:captionPop .5s ease both}
 @keyframes countdownPop{0%{opacity:0;transform:scale(1.65);filter:blur(8px)}35%{opacity:1;transform:scale(.9);filter:blur(0)}60%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
 @keyframes captionPop{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+
+/* Keep the sound toggle reachable above the start and pause overlays. */
+body.menu-open .topbar{z-index:110}
+body.menu-open .topbar #soundBtn{pointer-events:auto!important;position:relative;z-index:111}
